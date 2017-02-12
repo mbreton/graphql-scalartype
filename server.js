@@ -54,3 +54,8 @@ const query = new GraphQLObjectType({
     }
   })
 })
+
+const app  = express()
+const PORT = 8083
+
+app.listen(PORT, _ => console.log(`server running on port %s`, PORT))
