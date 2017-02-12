@@ -38,3 +38,19 @@ const UserType = new GraphQLObjectType({
     }
   })
 })
+
+const query = new GraphQLObjectType({
+  name: 'Queries',
+  description: 'Define queries',
+  fields: () => ({
+    getUser: {
+      type: UserType,
+      args: {
+        email: {
+          type: GraphQLString
+        }
+      },
+      resolve: (_, { email }) => datas.find(user => email === user.email)
+    }
+  })
+})
