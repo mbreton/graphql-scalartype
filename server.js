@@ -6,8 +6,27 @@ const {
   GraphQLObjectType,
   GraphQLInt,
   GraphQLString,
+  GraphQLScalarType,
+  GraphQLError,
   GraphQLSchema
 } = require('graphql')
+
+const emailValue = value => value.match(/@/) ? value : null
+
+const EmailType = new GraphQLScalarType({
+  name: 'Email',
+  serialize: value => value,
+  parseValue: value => value,
+  parseLiteral(ast) {
+    if (ast.kind !== 'StringValue') {
+      throw new GraphQLError('Query error: Email must be a string ' + ast.kind, [ast]);
+    }
+    if (!ast.value.match(/@/)) {
+      throw new GraphQLError('Query error: Not a valid Email', [ast]);
+    }
+    return ast.value
+  }
+})
 
 const UserType = new GraphQLObjectType({
   name: 'User',
@@ -48,7 +67,7 @@ const query = new GraphQLObjectType({
       type: UserType,
       args: {
         email: {
-          type: GraphQLString
+          type: EmailType
         }
       },
       resolve: (_, { email }) => datas.find(user => email === user.email)
