@@ -8,6 +8,7 @@ const {
   GraphQLString,
   GraphQLScalarType,
   GraphQLError,
+  Kind,
   GraphQLSchema
 } = require('graphql')
 
@@ -18,7 +19,7 @@ const EmailType = new GraphQLScalarType({
   serialize: value => value,
   parseValue: value => value,
   parseLiteral(ast) {
-    if (ast.kind !== 'StringValue') {
+    if (ast.kind !== Kind.STRING) {
       throw new GraphQLError('Query error: Email must be a string ' + ast.kind, [ast]);
     }
     if (!ast.value.match(/@/)) {
