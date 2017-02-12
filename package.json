@@ -1,0 +1,22 @@
+{
+  "name": "graphql-scalartype",
+  "version": "1.0.0",
+  "main": "server.js",
+  "repository": {
+    "url": "git@github.com:baxterio/graphql-scalartype.git",
+    "type": "git"
+  },
+  "author": "@ibaxterio",
+  "license": "MIT",
+  "scripts": {
+    "watch": "./node_modules/.bin/nodemon"
+  },
+  "dependencies": {
+    "express": "^4.14.1",
+    "express-graphql": "^0.6.3",
+    "graphql": "^0.9.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.11.0"
+  }
+}
