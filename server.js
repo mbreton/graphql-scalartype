@@ -64,7 +64,7 @@ const query = new GraphQLObjectType({
   name: 'Queries',
   description: 'Define queries',
   fields: () => ({
-    getUser: {
+    getUserByMail: {
       type: UserType,
       args: {
         email: {
@@ -72,10 +72,19 @@ const query = new GraphQLObjectType({
         }
       },
       resolve: (_, { email }) => datas.find(user => email === user.email)
+    },
+    getUserByIp: {
+      type: UserType,
+      args: {
+        ipAddress: {
+          type: GraphQLString
+        }
+      },
+      resolve: (_, { ipAddress }) => datas.find(user => ipAddress === user.ip_address)
     }
   })
 })
-
+// 87.151.144.38
 const schema = new GraphQLSchema({
   query
 })
