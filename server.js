@@ -5,7 +5,8 @@ const graphQLHTTP = require('express-graphql')
 const {
   GraphQLObjectType,
   GraphQLInt,
-  GraphQLString
+  GraphQLString,
+  GraphQLSchema
 } = require('graphql')
 
 const UserType = new GraphQLObjectType({
@@ -55,7 +56,22 @@ const query = new GraphQLObjectType({
   })
 })
 
+const schema = new GraphQLSchema({
+  query
+})
+
 const app  = express()
 const PORT = 8083
+
+app.use('/', graphQLHTTP({
+  schema: schema,
+  graphiql: true,
+  pretty: true,
+  formatError: error => ({
+    message: error.message,
+    locations: error.locations,
+    stack: error.stack
+  })
+}))
 
 app.listen(PORT, _ => console.log(`server running on port %s`, PORT))
