@@ -12,8 +12,6 @@ const {
   GraphQLSchema
 } = require('graphql')
 
-const emailValue = value => value.match(/@/) ? value : null
-
 const EmailType = new GraphQLScalarType({
   name: 'Email',
   serialize: value => value,
