@@ -70,15 +70,6 @@ const query = new GraphQLObjectType({
         }
       },
       resolve: (_, { email }) => datas.find(user => email === user.email)
-    },
-    getUserByIp: {
-      type: UserType,
-      args: {
-        ipAddress: {
-          type: GraphQLString
-        }
-      },
-      resolve: (_, { ipAddress }) => datas.find(user => ipAddress === user.ip_address)
     }
   })
 })
