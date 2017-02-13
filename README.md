@@ -128,6 +128,7 @@ Vous pouvez tester que notre resolver fonctionne correctement avec cette requete
 }
 ```
 * * ici "**user**" est un alias de notre resolver getUserByMail *
+
 Tous fonctionne correctement, je vous propose d'utiliser l'objet **GraphQLScalarType** afin de créer un type personnalisé pour les emails. Un **EmailType**.
 
 ```js
