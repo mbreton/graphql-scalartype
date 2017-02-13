@@ -73,7 +73,7 @@ const query = new GraphQLObjectType({
     }
   })
 })
-// 87.151.144.38
+
 const schema = new GraphQLSchema({
   query
 })
