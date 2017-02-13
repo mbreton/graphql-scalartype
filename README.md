@@ -1,6 +1,7 @@
 # Introduction au GraphQLScalarType
 
-GraphQL propose de controler les données via différents objets repésentant chacun un type.
+GraphQL propose de controler les données via différents objets repésentant chacun un type de donnée.
+
 Voici leur liste non exhaustive:
 
 - [GraphQLID](http://graphql.org/graphql-js/type/#graphqlid)
@@ -10,7 +11,7 @@ Voici leur liste non exhaustive:
 - [GraphQLString](http://graphql.org/graphql-js/type/#graphqlstring)
 - [GraphQLList](http://graphql.org/graphql-js/type/#graphqllist)
 
-et enfin l'objet [**GraphQLScalarType**](http://graphql.org/graphql-js/type/#graphqlscalartype) qui va nous permettre de créer des typages personnalisé ! C'est cet objet qui va nous intéresser ici.
+GraphQL propose également l'objet [**GraphQLScalarType**](http://graphql.org/graphql-js/type/#graphqlscalartype) qui va nous permettre de créer des typages personnalisé ! C'est cet objet qui va nous intéresser ici.
 
 Mais avant de créer notre typage personnalisé avec **GraphQLScalarType**, nous allons mettre en place un server GraphQL avec Express.
 
@@ -70,13 +71,13 @@ const UserType = new GraphQLObjectType({
 Nous avons créer un type **User** avec l'objet **GraphQLObjectType** sur la base des données de notre [datas.json](https://github.com/baxterio/graphql-scalartype/blob/master/datas.json). Chaque champs est ici typé via les objets de typage GraphQL. Nous avons utilisé **GraphQLInt** et **GraphQLString** sans oublier biensur de les importer.
 
 ```js
-[...]
+/** code **/
 
   GraphQLString,
   GraphQLSchema
 } = require('graphql')
 
-[...]
+/** code **/
 
 const query = new GraphQLObjectType({
   name: 'Queries',
@@ -114,9 +115,9 @@ app.use('/', graphQLHTTP({
 ```
 Notre résolver **getUserByMail** est maintenant en place et nous permet de requeter nos données en donnant un email en argument. Nous avons également utilisé le **graphql-js** comme middleware. Ici notre url racine est maintenant bindé à notre middleware.
 
-Lancer le server *(node server.js ou yarn watch si vous avez clone le dépot en bas de page)*, vous avez accès à l'interface graphique graphQL **graphiql** via [http://localhost:8083](http://localhost:8083)
+Lancer le server *(node server.js ou yarn watch si vous avez cloné le dépot)*, vous avez accès à l'interface graphique graphQL **graphiql** via l'url [http://localhost:8083](http://localhost:8083)
 
-Vous pouvez tester que notre resolver fonctionne correctement avec cette requete :
+Vous pouvez tester que notre resolver fonctionne correctement avec cette requete:
 ```js
 {
   user: getUserByMail(email: "ehuntern@huffingtonpost.com") {
@@ -126,10 +127,11 @@ Vous pouvez tester que notre resolver fonctionne correctement avec cette requete
   }
 }
 ```
+* * ici "**user**" est un alias de notre resolver getUserByMail *
 Tous fonctionne correctement, je vous propose d'utiliser l'objet **GraphQLScalarType** afin de créer un type personnalisé pour les emails. Un **EmailType**.
 
 ```js
-[...]
+/** code **/
 
   GraphQLString,
   GraphQLScalarType,
@@ -138,7 +140,7 @@ Tous fonctionne correctement, je vous propose d'utiliser l'objet **GraphQLScalar
   GraphQLSchema
 } = require('graphql')
 
-[...]
+/** code **/
 
 const EmailType = new GraphQLScalarType({
   name: 'Email',
@@ -156,6 +158,7 @@ const EmailType = new GraphQLScalarType({
 })
 ```
 Nous avons donc instancié l'objet **GraphQLScalarType** en lui donnant un objet de paramètres.
+TODO ...
 - *name*:
 - *serialize*:
 - *parseValue*:
