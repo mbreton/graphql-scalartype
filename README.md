@@ -11,9 +11,9 @@ Voici leur liste non exhaustive:
 - [GraphQLString](http://graphql.org/graphql-js/type/#graphqlstring)
 - [GraphQLList](http://graphql.org/graphql-js/type/#graphqllist)
 
-GraphQL propose également l'objet [**GraphQLScalarType**](http://graphql.org/graphql-js/type/#graphqlscalartype) qui va nous permettre de créer des typages personnalisés ! C'est cet objet qui va nous intéresser ici.
+GraphQL propose également l'objet [**GraphQLScalarType**](http://graphql.org/graphql-js/type/#graphqlscalartype) qui va nous permettre de créer des types personnalisés ! C'est cet objet qui va nous intéresser ici.
 
-Mais avant de créer notre typage personnalisé avec **GraphQLScalarType**, nous allons mettre en place un server GraphQL avec Express.
+Mais avant de créer notre type personnalisé avec **GraphQLScalarType**, nous allons mettre en place un server GraphQL avec Express.
 
 Un peu de code:
 
@@ -68,7 +68,7 @@ const UserType = new GraphQLObjectType({
   })
 })
 ```
-Nous avons crée un type **User** avec l'objet **GraphQLObjectType** sur la base des données de notre [datas.json](https://github.com/baxterio/graphql-scalartype/blob/master/datas.json). Chaque champs est ici typé via les objets de typage GraphQL. Nous avons utilisé **GraphQLInt** et **GraphQLString** sans oublier biensûr de les importer.
+Nous avons crée un type **User** avec l'objet **GraphQLObjectType** sur la base des données de notre [datas.json](https://github.com/baxterio/graphql-scalartype/blob/master/datas.json). Chaque champs est ici typé via les objets de type GraphQL. Nous avons utilisé **GraphQLInt** et **GraphQLString** sans oublier biensûr de les importer.
 
 ```js
 /** code **/
@@ -113,7 +113,7 @@ app.use('/', graphQLHTTP({
   })
 }))
 ```
-Notre résolveur **getUserByMail** est maintenant en place et nous permet de requêter nos données en donnant un email en argument. Nous avons également utiliser le module **graphql-js** et l'objet **graphQLHTTP** comme middleware. Ici notre url racine est maintenant bindé à notre middleware et note schema **GraphQLSchema**.
+Notre résolveur **getUserByMail** est maintenant en place et nous permet de requêter nos données en donnant un email en argument. Nous avons également utiliser le module **graphql-js** et l'objet **graphQLHTTP** comme middleware. Ici notre url racine est maintenant bindé à notre middleware et notre schema **GraphQLSchema**.
 
 Si vous lancez le serveur *(node server.js ou yarn watch si vous avez cloné le dépot)*, vous aurez accès à l'interface graphique graphQL **graphiql** via l'url [http://localhost:8083](http://localhost:8083)
 
@@ -130,7 +130,7 @@ Vous pouvez tester que notre resolver fonctionne correctement avec cette requêt
 
 > *ici "**user**" est un alias de notre resolver getUserByMail*
 
-Maintenant que note serveur fonctionne correctement, je vous propose d'utiliser l'objet **GraphQLScalarType** afin de créer un type personnalisé pour les emails. Un **EmailType**.
+Maintenant que notre serveur fonctionne correctement, je vous propose d'utiliser l'objet **GraphQLScalarType** afin de créer un type personnalisé pour les emails. Un **EmailType**.
 
 ```js
 /** code **/
@@ -153,7 +153,7 @@ const EmailType = new GraphQLScalarType({
   }
 })
 ```
-Nous avons donc instancié l'objet **GraphQLScalarType** en lui donnant un objet contenant certains paramètres.
+Nous avons donc une instance de l'objet **GraphQLScalarType** et nous lui donnons un objet en argument.
 
 L'attribut **name** permet de nommer notre nouveau type de données.
 
@@ -212,7 +212,7 @@ const query = new GraphQLObjectType({
   })
 })
 ```
-Nous demandons maintenant un email en argument corrspondant à sont propre type **EmailType** !
+Nous demandons maintenant un email en argument correspondant à sont propre type **EmailType** !
 
 
 - [Le github contenant la source](https://github.com/baxterio/graphql-scalartype)
