@@ -1,6 +1,6 @@
 # Introduction au GraphQLScalarType
 
-GraphQL propose de controler les données via différents objets repésentant chacun un type de donnée.
+GraphQL propose de controler les données via différents objets repésentant chacun un type de données.
 
 Voici leur liste non exhaustive:
 
@@ -11,7 +11,7 @@ Voici leur liste non exhaustive:
 - [GraphQLString](http://graphql.org/graphql-js/type/#graphqlstring)
 - [GraphQLList](http://graphql.org/graphql-js/type/#graphqllist)
 
-GraphQL propose également l'objet [**GraphQLScalarType**](http://graphql.org/graphql-js/type/#graphqlscalartype) qui va nous permettre de créer des typages personnalisé ! C'est cet objet qui va nous intéresser ici.
+GraphQL propose également l'objet [**GraphQLScalarType**](http://graphql.org/graphql-js/type/#graphqlscalartype) qui va nous permettre de créer des typages personnalisés ! C'est cet objet qui va nous intéresser ici.
 
 Mais avant de créer notre typage personnalisé avec **GraphQLScalarType**, nous allons mettre en place un server GraphQL avec Express.
 
@@ -68,7 +68,7 @@ const UserType = new GraphQLObjectType({
   })
 })
 ```
-Nous avons créer un type **User** avec l'objet **GraphQLObjectType** sur la base des données de notre [datas.json](https://github.com/baxterio/graphql-scalartype/blob/master/datas.json). Chaque champs est ici typé via les objets de typage GraphQL. Nous avons utilisé **GraphQLInt** et **GraphQLString** sans oublier biensur de les importer.
+Nous avons crée un type **User** avec l'objet **GraphQLObjectType** sur la base des données de notre [datas.json](https://github.com/baxterio/graphql-scalartype/blob/master/datas.json). Chaque champs est ici typé via les objets de typage GraphQL. Nous avons utilisé **GraphQLInt** et **GraphQLString** sans oublier biensûr de les importer.
 
 ```js
 /** code **/
@@ -113,11 +113,11 @@ app.use('/', graphQLHTTP({
   })
 }))
 ```
-Notre résolver **getUserByMail** est maintenant en place et nous permet de requeter nos données en donnant un email en argument. Nous avons également utilisé le **graphql-js** comme middleware. Ici notre url racine est maintenant bindé à notre middleware.
+Notre résolveur **getUserByMail** est maintenant en place et nous permet de requêter nos données en donnant un email en argument. Nous avons également utiliser le module **graphql-js** et l'objet **graphQLHTTP** comme middleware. Ici notre url racine est maintenant bindé à notre middleware et note schema **GraphQLSchema**.
 
-Lancer le server *(node server.js ou yarn watch si vous avez cloné le dépot)*, vous avez accès à l'interface graphique graphQL **graphiql** via l'url [http://localhost:8083](http://localhost:8083)
+Si vous lancez le serveur *(node server.js ou yarn watch si vous avez cloné le dépot)*, vous aurez accès à l'interface graphique graphQL **graphiql** via l'url [http://localhost:8083](http://localhost:8083)
 
-Vous pouvez tester que notre resolver fonctionne correctement avec cette requete:
+Vous pouvez tester que notre resolver fonctionne correctement avec cette requête:
 ```js
 {
   user: getUserByMail(email: "ehuntern@huffingtonpost.com") {
@@ -130,7 +130,7 @@ Vous pouvez tester que notre resolver fonctionne correctement avec cette requete
 
 > *ici "**user**" est un alias de notre resolver getUserByMail*
 
-Tous fonctionne correctement, je vous propose d'utiliser l'objet **GraphQLScalarType** afin de créer un type personnalisé pour les emails. Un **EmailType**.
+Maintenant que note serveur fonctionne correctement, je vous propose d'utiliser l'objet **GraphQLScalarType** afin de créer un type personnalisé pour les emails. Un **EmailType**.
 
 ```js
 /** code **/
@@ -149,21 +149,71 @@ const EmailType = new GraphQLScalarType({
   serialize: value => value,
   parseValue: value => value,
   parseLiteral(ast) {
-    if (ast.kind !== Kind.STRING) {
-      throw new GraphQLError('Query error: Email must be a string ' + ast.kind, [ast]);
-    }
-    if (!ast.value.match(/@/)) {
-      throw new GraphQLError('Query error: Not a valid Email', [ast]);
-    }
     return ast.value
   }
 })
 ```
-Nous avons donc instancié l'objet **GraphQLScalarType** en lui donnant un objet de paramètres.
-TODO ...
-- *name*:
-- *serialize*:
-- *parseValue*:
+Nous avons donc instancié l'objet **GraphQLScalarType** en lui donnant un objet contenant certains paramètres.
+
+L'attribut **name** permet de nommer notre nouveau type de données.
+
+Les attributs **serialize** et **parseValue** sont deux fonctions de "sérialization" qui permettent de s'assurer de la validité de la valeur d'entrée.
+
+**parseLiteral** est une fonction qui va nous retourner un objet contenant les informations du noeud AST de notre valeur d'entrée.
+
+Voici un exemple de cet objet:
+```js
+{
+  kind: 'StringValue',
+  value: 'ehuntern@huffingtonpost.com',
+  loc: {
+    start: 31,
+    end: 60
+  }
+}
+```
+C'est donc dans cette fonction **parseLiteral** que nous allons mettre en place les contrôles grâce notamment à cet objet.
+
+Nous avons accès au type de noeud AST avec l'attribut **kind** et à sa valeur avec l'attribut **value**.
+
+```js
+/** code **/
+parseLiteral(ast) {
+  if (ast.kind !== Kind.STRING) {
+    throw new GraphQLError('Query error: Email must be a string ' + ast.kind, [ast]);
+  }
+  if (!ast.value.match(/@/)) {
+    throw new GraphQLError('Query error: Not a valid Email', [ast]);
+  }
+  return ast.value
+}
+/** code **/
+```
+Ici nous commencons pas contrôler que notre valeur est bien de type *String*, via l'objet GraphQL **Kind**, qui nous met à disposition la liste des différents types de noeud AST.
+
+Ensuite nous faisons une vérification sommaire sur la valeur à contrôler, puis, si les deux conditions sont remplies, nous retournons notre valeur !
+
+Votre EmailType est terminé, vous pouvez maintenant l'utiliser dans la description de votre query:
+
+```js
+const query = new GraphQLObjectType({
+  name: 'Queries',
+  description: 'Define queries',
+  fields: () => ({
+    getUserByMail: {
+      type: UserType,
+      args: {
+        email: {
+          type: EmailType // Ici
+        }
+      },
+      resolve: (_, { email }) => datas.find(user => email === user.email)
+    }
+  })
+})
+```
+Nous demandons maintenant un email en argument corrspondant à sont propre type **EmailType** !
+
 
 - [Le github contenant la source](https://github.com/baxterio/graphql-scalartype)
   > yarn & yarn watch
