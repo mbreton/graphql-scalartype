@@ -137,8 +137,7 @@ Vous pouvez tester que notre `resolver` fonctionne correctement avec cette requ�
 Maintenant que notre serveur fonctionne correctement, je vous propose d'utiliser l'objet `GraphQLScalarType` afin de créer un type personnalisé pour les emails. Un `EmailType`.
 
 ```js
-/** code **/
-
+// ...
   GraphQLString,
   GraphQLScalarType,
   GraphQLError,
@@ -146,7 +145,7 @@ Maintenant que notre serveur fonctionne correctement, je vous propose d'utiliser
   GraphQLSchema
 } = require('graphql')
 
-/** code **/
+/** ... **/
 
 const EmailType = new GraphQLScalarType({
   name: 'Email',
